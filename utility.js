@@ -27,5 +27,5 @@ export function generateCode() {
         code += letters[Math.floor(Math.random() * letters.length)];
     }
 
-    return code;
+    return code
 }
