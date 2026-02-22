@@ -1,0 +1,123 @@
+body {
+  /*background-color: #dcdcdc;*/
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 10px;
+}
+
+.profile-card {
+  background: #f5f5f5;
+  width: 50%;
+  padding: 30px;
+  border-radius: 10px;
+  border: 4px solid #3700ff;
+  text-align: center;
+  /*box-shadow: 0 8px 20px rgba(98, 0, 255, 0.1);*/
+}
+
+.profile-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 5px;
+  border: 2px solid #33333338;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.username {
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+hr {
+  margin: 20px 0;
+  border: none;
+  height: 2px;
+  background-color: #3333333f;
+}
+
+.wins-box {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid #33333349;
+  font-weight: bold;
+  background: white;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border-radius: 30px;
+  border: white;
+}
+
+.danger {
+    background-color: red;
+}
+
+.gobackbutton {
+    gap: 10px;
+}
+
+.fucku {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 10px;
+}
+
+.profile-selection {
+    background: #f5f5f5;
+    width: 50%;
+    padding: 30px;
+    border-radius: 10px;
+    border: 4px solid #3700ff;
+    text-align: center;
+}
+
+.select-avatar-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.select-avatar-image:hover {
+  transform: translateY(-8px);
+  /*box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);*/
+}
+
+.hidden {
+    display: none;
+}
+

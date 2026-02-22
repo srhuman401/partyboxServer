@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="apple-mobile-web-app-title" content="Partybox">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="/public/assets/icon/bg-full.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partybox</title>
+  <link rel="icon" type="image/png" href="/public/assets/icon/nobg-notxt.png">
+  <link rel="stylesheet" href="/public/dumbfront/style.css">
+</head>
+<body>
+
+  <!-- JOIN SCREEN -->
+  <div id="joinScreen" class="screen">
+    <!--<h1>Join game</h1>-->
+    <!--<h2 id="a_JoinSubText"></h2>-->
+
+    <div class="form">
+      <label class="formfieldheader">
+        NICKNAME
+      </label>
+      <input type="text" placeholder="Nickname" id="nickname" maxlength="10" oninput='this.value = this.value.toUpperCase()'>
+      <label class="formfieldheader">
+        GAME CODE
+      </label>
+      <input type="text" placeholder="Code" id="code" maxlength="4" oninput='this.value = this.value.toUpperCase()'>
+      <button id="joinBtn">Join</button>
+      <label id="a_JoinSubText" class="formcodestatus">
+      </label>
+    </div>
+
+    <img src="/public/assets/icon/nobg-full.png" alt="Partybox Logo" class="cat">
+    <!-- SIDE BAR -->
+    <div class="container">
+      <div class="nav">
+          <a id="manageProfileLink" class="navigationlink" href="view/manage-profile">Manage My Profile</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- WAITING SCREEN -->
+  <div id="waitingScreen" class="screen hidden">
+    <h1>Waiting for host...</h1>
+  </div>
+
+
+  <!-- HOST SCREEN -->
+  <div id="hostScreen" class="screen hidden">
+    <h1>Host Panel</h1>
+    <button id="startBtn">Start Game</button>
+  </div>
+
+  <!-- GAME CONTROLLER / DUMB CLIENT PANEL -->
+  <div id = "gamePanel" class="screen hidden"></div>
+
+  <script src="/public/dumbfront/script.js"></script>
+</body>
+</html>
