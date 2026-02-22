@@ -1,6 +1,9 @@
 // i have little experience with web development
 // this mess runs the dumb client
 
+// why the hell is it auto adding these???
+//const { json, text } = require("express");
+
 //import { Profiler } from "react";
 
 const hostname = window.location.hostname
@@ -18,7 +21,7 @@ const IS_TOUCH_DEVICE = "ontouchstart" in window;
 
 const SOCKET = new WebSocket(`ws://${hostname}:3000`)
 let CONTROLLER_NET_LOCK = false
-let GAME_STRINGS 
+let GAME_STRINGS = {}
 getRequest(PUBLIC_ASSETS+"assets/gamelocale.json", p => {
   GAME_STRINGS=p
 })
@@ -123,6 +126,11 @@ function getTextBoxInput(id) {
   return "null"
 }
 
+function s_Send(msg) {
+  const _STRINGED = JSON.stringify(msg)
+  SOCKET.send(_STRINGED)
+}
+
 function clearGamePanel() {
   GAME_PANEL_DIV.innerHTML = ''
 }
@@ -162,6 +170,19 @@ function insertNewGamePanelElement(element) {
             }))
           }
           break
+        case "twtrSubmitGuess":
+          onclickFn = () => {
+              s_Send({
+                type: "tell_game_client",
+                msg: {
+                  type: "submit_guess",
+                  pos: params.position||-1
+                }
+              })
+          }
+          break
+        case "twtrSubmitForm":
+          break
       }
 
       button.addEventListener("click", () => {
@@ -182,6 +203,14 @@ function insertNewGamePanelElement(element) {
       inputBox.placeholder = bPlaceholderText
       GAME_PANEL_DIV.appendChild(inputBox)
       break
+    case "text":
+      const labelEmt = document.createElement("label")
+      const elmtId = params.id
+      if (elmtId) { labelEmt.id = elmtId }
+      labelEmt.textContent = params.text||""
+      if (params.classes) { params.classes.forEach(i => labelEmt.classList.add(i)) }
+      GAME_PANEL_DIV.appendChild(labelEmt)
+      break
   }
 }
 
@@ -198,11 +227,8 @@ function exitRoom() {
   showScreen("joinScreen")
 }
 
-SOCKET.onmessage = (msg) => {
-    const data = JSON.parse(msg.data)
-    console.log(data.type)
-    console.log(msg.data)
-    switch (data.type) {
+function handleMessageData(data) {
+  switch (data.type) {
         case "set_c_state":
           switch (data.state) {
             case "waiting":
@@ -219,6 +245,9 @@ SOCKET.onmessage = (msg) => {
           exitRoom()
           alert(`Something went wrong (Error: ${data.reason||"unknown"})`)
           break;
+        case "clear_gamepanel":
+          clearGamePanel()
+          break
         // game specific cases (this code sucks)
         case "testgame_show_input":
           clearGamePanel()
@@ -237,7 +266,72 @@ SOCKET.onmessage = (msg) => {
             }
           })
           break
+        // Twisted Truth
+        case "twtr_start_submission":
+          const numberOfTruths = data.truths || 2
+          insertNewGamePanelElement({
+            type: "text",
+            params: {
+              text: `Enter ${numberOfTruths} truths`,
+            }
+          })
+          for (let i = 1; i <= numberOfTruths; i++) {
+            insertNewGamePanelElement({
+              type: "textbox",
+              params: {
+                placeholder: "Enter a truth...",
+                id: `truthInputBox${i}`
+              }
+            })
+          }
+          insertNewGamePanelElement({
+            type: "text",
+            params: {
+              text: `And one lie...`,
+            }
+          })
+          insertNewGamePanelElement({
+            type:"textbox",
+            params: {
+              placeholder: "Enter the lie...",
+              id: "lieInputBox"
+            }
+          })
+          insertNewGamePanelElement({
+            type: "textbutton",
+            params: {
+              text: "Submit",
+              buttonType: "twtrSubmitForm",
+              numtruths: numberOfTruths
+            }
+          })
+          break
+        case "twtr_start_guessing":
+          const choices = data.choices||[{text: "It failed to load!", pos:1}]
+          insertNewGamePanelElement({
+            type: "text",
+            params: {
+              text: "Choose the lie!"
+            }
+          })
+          choices.forEach(c => {
+            insertNewGamePanelElement({
+              type: "textbutton",
+              params: {
+                text: c.text,
+                position: c.position,
+                buttonType: "twtrSubmitGuess"
+              }
+            })
+          })
     };
+}
+
+SOCKET.onmessage = (msg) => {
+    const data = JSON.parse(msg.data)
+    console.log(data.type)
+    console.log(msg.data)
+    handleMessageData(data)
 };
 
 document.getElementById('code').addEventListener('change', (evt) => {

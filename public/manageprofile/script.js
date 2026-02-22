@@ -85,6 +85,19 @@ AVATAR_IMG.addEventListener("click", () => {
     showScreen("profileSelection")
 })
 
+function createSetAvatarBtn(id) {
+    const ELEMENT = document.createElement("img")
+    ELEMENT.src = IMAGE_AVATAR_MAIN_PATH+id+".png"
+    ELEMENT.className="select-avatar-image"
+    document.getElementById("profileSelection").appendChild(ELEMENT)
+    ELEMENT.addEventListener("click", () => {
+      CACHED_PROFILE.avatar = id
+      tryPost(APIH+"set-avatar", {uid: CACHED_PROFILE.uid, avatar: id})
+      onProfileGot()
+      showScreen("profileCard")
+    })
+}
+
 async function init() {
   const ID = USER_ID||"_j"
   const DOES_PROFILE_EXIST = await getRequest(APIH+"check-profile/"+USER_ID)
@@ -101,18 +114,7 @@ async function init() {
     return
   }
 
-  PUBLIC_AVATARS.forEach(id => {
-    const ELEMENT = document.createElement("img")
-    ELEMENT.src = IMAGE_AVATAR_MAIN_PATH+id+".png"
-    ELEMENT.className="select-avatar-image"
-    document.getElementById("profileSelection").appendChild(ELEMENT)
-    ELEMENT.addEventListener("click", () => {
-      CACHED_PROFILE.avatar = id
-      tryPost(APIH+"set-avatar", {uid: CACHED_PROFILE.uid, avatar: id})
-      onProfileGot()
-      showScreen("profileCard")
-    })
-  })
+  PUBLIC_AVATARS.forEach(id => createSetAvatarBtn(id))
 }
 
 init()

@@ -7,6 +7,19 @@ const NAME_KEYWORDS = [  "Apple", "River", "Cloud", "Stone", "Forest", "Ocean", 
   "Stone", "Wood", "Clay", "Glass", "Paper", "Book", "Chair", "Table",
   "Clock", "Door", "Window", "House"]
 
+// game handlers
+import { testGameHandler } from "./games/testgame"
+
+export function getGameHandler(gameType) {
+    let rHandler
+    switch (gameType) {
+        case "testGame": 
+            rHandler = testGameHandler
+            break
+    }
+    return rHandler || testGameHandler
+}
+
 export function generateUsername() {
     const numWords = 3
     let words = []
