@@ -8,7 +8,7 @@ const NAME_KEYWORDS = [  "Apple", "River", "Cloud", "Stone", "Forest", "Ocean", 
   "Clock", "Door", "Window", "House"]
 
 // game handlers
-import { testGameHandler } from "./games/testgame"
+import { testGameHandler } from "./games/testgame.js"
 
 export function getGameHandler(gameType) {
     let rHandler

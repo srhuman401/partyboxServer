@@ -13,6 +13,7 @@ function getRoomFromSocket(ws) {
 
 export function handleMessage(ws, data) {
     var room = getRoomFromSocket(ws)
+    const clientUserId = ws.uid||""
     const isHost = ws.role == "host"
     switch (data.type) {
         case "create_room":
@@ -28,12 +29,14 @@ export function handleMessage(ws, data) {
         case "send_to_controller_clients":
             if (!isHost) break
             if (data.msg) {
+                data.msg.uid = clientUserId
                 broadcast(room, data.msg)
             }
             break
         case "tell_game_client": 
             if (isHost) break
             if (data.msg) {
+                data.msg.uid = clientUserId
                 sendToHost(room, data.msg)
             }
             break

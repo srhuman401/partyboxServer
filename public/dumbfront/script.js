@@ -70,6 +70,13 @@ async function tryValidating() {
 
 tryValidating()
 
+function normalString(string) {
+  const str = String(string).toUpperCase
+  const VALID_CHARACTERS = ` ABCDEFGHIJKLMNOPQRSTUVWXYZ01234569()-."'`
+  const RESULT = [...str].filter(char => VALID_CHARACTERS.includes(char)).join('')
+  return RESULT
+}
+
 async function tryPost(url, data, onsuccess, onfailed) {
   try {
     const response = await fetch(url, {
@@ -182,6 +189,41 @@ function insertNewGamePanelElement(element) {
           }
           break
         case "twtrSubmitForm":
+          onclickFn = () => {
+            const NumTruths = params.numtruths||0
+            const Truths = []
+            const Lie = ""
+            let failed = false
+            
+            const lieInputBox = document.getElementById("lieInputBox")
+            if (lieInputBox) {
+              const entered = normalString(lieInputBox.value).toUpperCase()
+              if (entered.length<1) {failed = true; return}
+              Lie = entered
+            } else {failed = true}
+
+            for (let i = 1; i <= NumTruths; i++) {
+              const inputBox = document.getElementById(`truthInputBox${i}`)
+              if (inputbox){
+                const entered = normalString(inputBox.value).toUpperCase()
+                if (entered.length<1) {failed = true; break}
+                Truths.push(entered)
+              } else {failed = true; break}
+            }
+
+            if (failed) {
+              return
+            }
+            
+            s_Send({
+              type: "tell_game_client",
+              msg: {
+                type: "submit_form",
+                truths: Truths,
+                lie: Lie
+              }
+            })
+          }
           break
       }
 
@@ -266,13 +308,14 @@ function handleMessageData(data) {
             }
           })
           break
-        // Twisted Truth
+
+        // Two True/twtr (called Lieability in-game)
         case "twtr_start_submission":
           const numberOfTruths = data.truths || 2
           insertNewGamePanelElement({
             type: "text",
             params: {
-              text: `Enter ${numberOfTruths} truths`,
+              text: `Enter ${numberOfTruths} truth${numberOfTruths>1 && "s" || ""}`,
             }
           })
           for (let i = 1; i <= numberOfTruths; i++) {
